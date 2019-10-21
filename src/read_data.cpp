@@ -21,6 +21,7 @@ private:
     ros::Publisher cloud_pub_;
     ros::Publisher sac_cloud_pub_;
     ros::Publisher pass_cloud_pub_;
+    ros::Publisher image_pub_;
     ros::Subscriber cloud_sub_;
     ros::Subscriber image_sub_;
     void cloudCallback(const sensor_msgs::PointCloud2ConstPtr& msgs);
@@ -37,6 +38,7 @@ ReadData::ReadData(){
     cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>("/vox_cloud", 1, false);
     sac_cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>("/sac_cloud", 1, false);
     pass_cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>("/pass_cloud", 1, false);
+    image_pub_ = nh_.advertise<sensor_msgs::Image>("/cloud_image", 1, false);
     cloud_sub_ = nh_.subscribe(cloud_topic_, 1, &ReadData::cloudCallback, this);
     image_sub_ = nh_.subscribe(image_topic_, 1, &ReadData::imageCallback, this);
 
@@ -78,6 +80,17 @@ void ReadData::cloudCallback(const sensor_msgs::PointCloud2ConstPtr& msgs){
     pcl::toROSMsg(pass_pcl_cloud, ros_cloud);
     ros_cloud.header.frame_id = sensor_frame;
     pass_cloud_pub_.publish(ros_cloud);
+
+    sensor_msgs::Image image;
+    image.header.frame_id = sensor_frame;
+    std::cout << "pcl_cloud_size:" << pcl_cloud.size() << std::endl;
+    std::cout << "pcl_cloud_height:" << pcl_cloud.height << std::endl;
+    std::cout << "pcl_cloud_width:" << pcl_cloud.width << std::endl;
+    std::cout << "image:" <<  image.step << std::endl;
+    pcl::toROSMsg(pcl_cloud, image);
+    std::cout << "image:" <<  image.step << std::endl;
+    image_pub_.publish(image);
+
 }
 
 void ReadData::imageCallback(const sensor_msgs::ImageConstPtr& msgs){

@@ -18,7 +18,11 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   std_srvs
   tf
+  cv_bridge
+  image_transport
 )
+
+find_package(OpenCV REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -213,3 +217,8 @@ include_directories(
 # catkin_add_nosetests(test)
 add_executable(read_data src/read_data.cpp)
 target_link_libraries(read_data ${catkin_LIBRARIES})
+add_executable(hough src/hough.cpp)
+target_link_libraries(hough 
+        ${catkin_LIBRARIES}
+        ${OpenCV_LIBRARIES}
+        )
