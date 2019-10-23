@@ -222,3 +222,6 @@ target_link_libraries(hough
         ${catkin_LIBRARIES}
         ${OpenCV_LIBRARIES}
         )
+add_executable(one_cloud_pub src/one_cloud_pub.cpp)
+target_link_libraries(one_cloud_pub ${catkin_LIBRARIES})
+
